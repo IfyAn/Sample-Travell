@@ -1,11 +1,15 @@
-import React, {useContext, useState} from 'react'
+import React, {useContext, useState, useEffect} from 'react'
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {AuthContext} from '../navigation/AuthProvider';
 import moment from 'moment'
+import ProgressiveImage from './ProgressiveImage';
+import firestore from '@react-native-firebase/firestore';
 
-const PostCard = ({item, onDelete}) => {
+const PostCard = ({item, onDelete, onPress}) => {
     const {user, logout} = useContext(AuthContext);
+    const [userData, setUserData] = useState(null);
+
     likeIcon = item.liked ? 'heart' : 'heart-outline';
     likeIconColor = item.liked ? '#2e64e5' : '#333';
 
@@ -25,15 +29,46 @@ const PostCard = ({item, onDelete}) => {
             commentText = 'Comment';
         }
 
+        const getUser = async() => {
+            const currentUser = await firestore()
+            .collection('users')
+            .doc(item.userId)
+            .get()
+            .then((documentSnapshot) => {
+              if( documentSnapshot.exists ) {
+                console.log('User Data', documentSnapshot.data());
+                setUserData(documentSnapshot.data());
+              }
+            })
+          }
+        
+        useEffect(() => {
+            getUser();
+          }, []);
+    
     return (
-        <View style={styles.card}>
-            <Image source={{uri:item.userImg}} style={styles.userImage} />
+        <View style={styles.card} key={item.id}>
+            <View style={styles.userInfo}>
+            <Image  source={{uri: userData ? userData.userImg || 'https://lh5.googleusercontent.com/-b0PKyNuQv5s/AAAAAAAAAAI/AAAAAAAAAAA/AMZuuclxAM4M1SCBGAO7Rp-QP6zgBEUkOQ/s96-c/photo.jpg' : 'https://lh5.googleusercontent.com/-b0PKyNuQv5s/AAAAAAAAAAI/AAAAAAAAAAA/AMZuuclxAM4M1SCBGAO7Rp-QP6zgBEUkOQ/s96-c/photo.jpg'}} style={styles.userImage} />
             <View style={styles.userInfoText}>
-                <Text style={styles.userName}>{item.userName}</Text>
+                <TouchableOpacity onPress={onPress}>
+                    <Text style={styles.userName}>{userData ? userData.fname || 'Test' : 'Test'} {userData ? userData.lname || 'User' : 'User'}</Text>
+                </TouchableOpacity>
                 <Text style={styles.postTime}>{moment(item.postTime.toDate()).fromNow()}</Text>
             </View>
+            </View>
             <Text style={styles.postText}>{item.post}</Text>
-            {item.postImg != null ? <Image source={{uri:item.postImg}} style={styles.postImg} /> : <View style={styles.divider} />}
+            {/* {item.postImg != null ? <Image source={{uri:item.postImg}} style={styles.postImg} /> : <View style={styles.divider} />} */}
+             {item.postImg != null ?    
+                <ProgressiveImage
+                    defaultImageSource={require('../assets/default-img.jpg')}
+                    source={{uri: item.postImg}}
+                    style={{width: '100%', height: 250}}
+                    resizeMode="cover"
+                /> 
+                : 
+                <View style={styles.divider} />
+                }
             <View style={styles.interactionWrapper}>
                 <TouchableOpacity style={styles.interaction}>
                         <Ionicons name={likeIcon}  size={25} color={likeIconColor} />
@@ -106,7 +141,7 @@ const styles = StyleSheet.create({
         marginBottom: 15,
     },
     postTime:{
-        fontSize:2,
+        fontSize:12,
         fontFamily:'Lato-Regular',
         color:'#666',
     },

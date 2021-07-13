@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from 'react';
-import { StyleSheet, Text, View, Image, FlatList, TouchableOpacity, Alert } from 'react-native'
+import { StyleSheet, Text, View, Image, SafeAreaView, FlatList, TouchableOpacity, Alert, ScrollView } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import PostCard from '../components/PostCard'
 import firestore from '@react-native-firebase/firestore';
+import SkeletonPlaceholder from "react-native-skeleton-placeholder";
 
 import storage from '@react-native-firebase/storage';
 
@@ -68,7 +69,7 @@ const Posts = [
     comments: '0',
   },
 ];
-const HomeScreen = () => {
+const HomeScreen = ({navigation}) => {
   const [posts, setPosts] = useState(null);
   const [loading, setLoading] = useState(true);
   const [deleted, setDeleted] = useState(false);
@@ -196,15 +197,70 @@ const HomeScreen = () => {
       .catch((e) => console.log('Error deleting posst.', e));
   };
 
+  const ListHeader = () => {
+    return null;
+  };
+
     return (
-        <View style={styles.container}>
-            <FlatList 
-                data={posts}
-                renderItem={({item})=><PostCard item={item} onDelete={handleDelete} />}
-                keyExtractor={item=>item.id}
-                showsVerticalSrollIndicator={false}
-            />
-        </View>
+      <SafeAreaView style={{flex: 1}}>
+      {loading ? (
+        <ScrollView
+          style={{flex: 1}}
+          contentContainerStyle={{alignItems: 'center'}}>
+          <SkeletonPlaceholder>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <View style={{width: 60, height: 60, borderRadius: 50}} />
+              <View style={{marginLeft: 20}}>
+                <View style={{width: 120, height: 20, borderRadius: 4}} />
+                <View
+                  style={{marginTop: 6, width: 80, height: 20, borderRadius: 4}}
+                />
+              </View>
+            </View>
+            <View style={{marginTop: 10, marginBottom: 30}}>
+              <View style={{width: 300, height: 20, borderRadius: 4}} />
+              <View
+                style={{marginTop: 6, width: 250, height: 20, borderRadius: 4}}
+              />
+              <View
+                style={{marginTop: 6, width: 350, height: 200, borderRadius: 4}}
+              />
+            </View>
+          </SkeletonPlaceholder>
+          <SkeletonPlaceholder>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <View style={{width: 60, height: 60, borderRadius: 50}} />
+              <View style={{marginLeft: 20}}>
+                <View style={{width: 120, height: 20, borderRadius: 4}} />
+                <View
+                  style={{marginTop: 6, width: 80, height: 20, borderRadius: 4}}
+                />
+              </View>
+            </View>
+            <View style={{marginTop: 10, marginBottom: 30}}>
+              <View style={{width: 300, height: 20, borderRadius: 4}} />
+              <View
+                style={{marginTop: 6, width: 250, height: 20, borderRadius: 4}}
+              />
+              <View
+                style={{marginTop: 6, width: 350, height: 200, borderRadius: 4}}
+              />
+            </View>
+          </SkeletonPlaceholder>
+        </ScrollView>
+      ) : (
+            <View style={styles.container}>
+                <FlatList 
+                    data={posts}
+                    renderItem={({item})=><PostCard item={item} onDelete={handleDelete} onPress={()=>navigation.navigate('HomeProfile', {userId: item.userId})} />}
+                    keyExtractor={item=>item.id}
+                    ListHeaderComponent={ListHeader}
+                    ListFooterComponent={ListHeader}
+                    showsVerticalSrollIndicator={false}
+                />
+            </View>
+         )}
+      </SafeAreaView>
     )
 }
 

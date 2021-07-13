@@ -90,12 +90,14 @@ const FeedStack = ({navigation}) => (
 
 const MessageStack = ({navigation}) => (
   <Stack.Navigator>
+    <Stack.Screen name="Messages" component={MessagesScreen} />
     <Stack.Screen
       name="Chat"
       component={ChatScreen}
-      options={{
+      options={({route}) => ({
+        title: route.params.userName,
         headerBackTitleVisible: false,
-      }}
+      })}
     />
   </Stack.Navigator>
 );
@@ -127,6 +129,15 @@ const ProfileStack = ({navigation}) => (
 );
 
 const AppStack = () => {
+  // const getTabBarVisibility = (route) => {
+  //   const routeName = route.state
+  //     ? route.state.routes[route.state.index].name : '';
+  //   if (routeName === 'Chat') {
+  //     return false;
+  //   }
+  //   return true;
+  // };
+
   return (
     <Tab.Navigator
       tabBarOptions={{
@@ -146,10 +157,16 @@ const AppStack = () => {
           ),
         }}
       />
-      <Tab.Screen
+            <Tab.Screen
         name="Messages"
         component={MessageStack}
-        options={{
+        options={({route}) => ({
+          //tabBarVisible: route.state && route.state.index === 0,
+          //tabBarVisible: getTabBarVisibility(route),
+          // Or Hide tabbar when push!
+          // https://github.com/react-navigation/react-navigation/issues/7677
+          // tabBarVisible: route.state && route.state.index === 0,
+          // tabBarLabel: 'Home',
           tabBarIcon: ({color, size}) => (
             <Ionicons
               name="chatbox-ellipses-outline"
@@ -157,7 +174,7 @@ const AppStack = () => {
               size={size}
             />
           ),
-        }}
+        })}
       />
       <Tab.Screen
         name="Profile"
