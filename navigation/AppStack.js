@@ -14,6 +14,7 @@ import ProfileScreen from '../screens/ProfileScreen';
 import AddPostScreen from '../screens/AddPostScreen';
 import MessagesScreen from '../screens/MessagesScreen';
 import EditProfileScreen from '../screens/EditProfileScreen';
+import MapScreen from '../screens/MapScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -21,7 +22,7 @@ const Tab = createBottomTabNavigator();
 const FeedStack = ({navigation}) => (
   <Stack.Navigator>
     <Stack.Screen
-      name="RN Social"
+      name="Sample Travell"
       component={HomeScreen}
       options={{
         headerTitleAlign: 'center',
@@ -29,11 +30,22 @@ const FeedStack = ({navigation}) => (
           color: '#2e64e5',
           fontFamily: 'Kufam-SemiBoldItalic',
           fontSize: 18,
+          fontWeight:'bold'
         },
         headerStyle: {
           shadowColor: '#fff',
           elevation: 0,
         },
+        headerLeft: () => (
+          <View style={{marginLeft: 10}}>
+            <Ionicons
+              name="ios-menu"
+              size={25}
+              backgroundColor='ececec'
+              onPress={() => navigation.openDrawer()}
+            />
+          </View>
+        ),
         headerRight: () => (
           <View style={{marginRight: 10}}>
             <FontAwesome 
@@ -77,6 +89,16 @@ const FeedStack = ({navigation}) => (
           shadowColor: '#fff',
           elevation: 0,
         },
+        headerLeft: () => (
+          <View style={{marginLeft: 10}}>
+            <Ionicons
+              name="ios-menu"
+              size={25}
+              backgroundColor='ececec'
+              onPress={() => navigation.openDrawer()}
+            />
+          </View>
+        ),
         headerBackTitleVisible: false,
         headerBackImage: () => (
           <View style={{marginLeft: 15}}>
@@ -101,6 +123,11 @@ const MessageStack = ({navigation}) => (
     />
   </Stack.Navigator>
 );
+const MapStack = ({navigation}) => (
+  <Stack.Navigator>
+    <Stack.Screen name="Map" component={MapScreen} />
+  </Stack.Navigator>
+);
 
 const ProfileStack = ({navigation}) => (
   <Stack.Navigator>
@@ -108,7 +135,17 @@ const ProfileStack = ({navigation}) => (
       name="Profile"
       component={ProfileScreen}
       options={{
-        headerShown: false,
+        //headerShown: false,
+        headerLeft: () => (
+          <View style={{marginLeft: 10}}>
+            <Ionicons
+              name="ios-menu"
+              size={25}
+              backgroundColor='ececec'
+              onPress={() => navigation.openDrawer()}
+            />
+          </View>
+        ),
       }}
     />
     <Stack.Screen
@@ -157,7 +194,7 @@ const AppStack = () => {
           ),
         }}
       />
-            <Tab.Screen
+       <Tab.Screen
         name="Messages"
         component={MessageStack}
         options={({route}) => ({
@@ -183,6 +220,16 @@ const AppStack = () => {
           // tabBarLabel: 'Home',
           tabBarIcon: ({color, size}) => (
             <Ionicons name="person-outline" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Map"
+        component={MapStack}
+        options={{
+          // tabBarLabel: 'Home',
+          tabBarIcon: ({color, size}) => (
+            <MaterialCommunityIcons name="map-marker-outline" color={color} size={size} />
           ),
         }}
       />

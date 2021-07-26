@@ -22,7 +22,7 @@ const LoginScreen = ({navigation}) => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Image source={require('../assets/logo.jpg')} style={styles.logo} />
-      <Text style={styles.text}>RN Social App</Text>
+      <Text style={styles.text}>Sample Travell</Text>
 
       <FormInput
         labelValue={email}
@@ -47,7 +47,7 @@ const LoginScreen = ({navigation}) => {
         onPress={() => login(email, password)}
       />
 
-      <TouchableOpacity style={styles.forgotButton} onPress={() => {}}>
+      <TouchableOpacity style={styles.forgotButton} onPress={() => navigation.navigate('ForgetPassword')}>
         <Text style={styles.navButtonText}>Forgot Password?</Text>
       </TouchableOpacity>
 

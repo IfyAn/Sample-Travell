@@ -14,6 +14,13 @@ export const AuthProvider = ({children}) => {
       value={{
         user,
         setUser,
+        getCurrentUser: async () => {
+          try {
+            await auth().currentUser.uid
+          } catch (e) {
+            console.log(e);
+          }
+        },
         login: async (email, password) => {
           try {
             await auth().signInWithEmailAndPassword(email, password);
@@ -92,6 +99,13 @@ export const AuthProvider = ({children}) => {
             console.log(e);
           }
         },
+        forgetPassword :async (email) => {
+          try {
+            await auth().sendPasswordResetEmail(email)
+          } catch (e) {
+            console.log(e);
+          }
+        }
       }}>
       {children}
     </AuthContext.Provider>
