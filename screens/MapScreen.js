@@ -221,7 +221,7 @@ export default function MapScreen() {
                       <Marker 
                         coordinate={{
                               latitude: 6.457060,
-                              longitude: 88.4354486029795,
+                              longitude: 3.212420,
                         }}
                         image={require('../assets/map_marker.png')}
                         title="Test Title"
